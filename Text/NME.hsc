@@ -9,40 +9,11 @@ import Foreign.C.String
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.UTF8 as BS (toString, fromString)
 
--- WARNING: If the NME enum definitions change, then these have to change
-
-newtype Err = Err CInt deriving (Show, Eq)
-#enum Err, Err, \
-	kNMEErrOk = 0, \
-	kNMEErrNotEnoughMemory = (0 + 1), \
-	kNMEErrBadMarkup = ((0 + 1) + 1), \
-	kNMEErrInternal = (((0 + 1) + 1) + 1), \
-	kNMEErr1stNMEOpt = ((((0 + 1) + 1) + 1) + 1), \
-	kNMEErr1stUser = 10000
-
-newtype ProcessOpt = ProcessOpt CInt deriving (Show, Eq)
-#enum ProcessOpt, ProcessOpt, \
-	kNMEProcessOptDefault = 0, \
-	kNMEProcessOptNoPreAndPost = 0x1, \
-	kNMEProcessOptNoH1 = 0x4, \
-	kNMEProcessOptH1Num = 0x8, \
-	kNMEProcessOptH2Num = 0x10, \
-	kNMEProcessOptNoDL = 0x20, \
-	kNMEProcessOptNoIndentedPar = 0x40, \
-	kNMEProcessOptNoMultilinePar = 0x80, \
-	kNMEProcessOptNoEscape = 0x100, \
-	kNMEProcessOptNoHRule = 0x200, \
-	kNMEProcessOptNoLink = 0x400, \
-	kNMEProcessOptNoImage = 0x800, \
-	kNMEProcessOptNoTable = 0x1000, \
-	kNMEProcessOptNoUnderline = 0x2000, \
-	kNMEProcessOptNoMonospace = 0x4000, \
-	kNMEProcessOptNoSubSuperscript = 0x8000, \
-	kNMEProcessOptNoBold = 0x10000, \
-	kNMEProcessOptNoItalic = 0x20000, \
-	kNMEProcessOptNoPlugin = 0x40000, \
-	kNMEProcessOptVerbatimMono = 0x100000, \
-	kNMEProcessOptXRef = 0x200000
+-- | Takes a string and options, returns Either an error code or a string
+--   in the specified format
+process :: String -> [ProcessOpt] -> String -> Ptr OutputFormat -> Int -> Either Err String
+process input options eol outputFormat fontSize = unsafeLocalState $
+	io_process input options eol outputFormat fontSize
 
 newtype OutputFormat = OutputFormat (Ptr OutputFormat)
 
@@ -122,6 +93,37 @@ io_process input options eol outputFormat fontSize =
 	where
 	c_options = foldr (\(ProcessOpt o) acc -> acc .|. o) 0 options
 
-process :: String -> [ProcessOpt] -> String -> Ptr OutputFormat -> Int -> Either Err String
-process input options eol outputFormat fontSize = unsafeLocalState $
-	io_process input options eol outputFormat fontSize
+-- WARNING: If the NME enum definitions change, then these have to change
+
+newtype Err = Err CInt deriving (Show, Eq)
+#enum Err, Err, \
+	kNMEErrOk = 0, \
+	kNMEErrNotEnoughMemory = (0 + 1), \
+	kNMEErrBadMarkup = ((0 + 1) + 1), \
+	kNMEErrInternal = (((0 + 1) + 1) + 1), \
+	kNMEErr1stNMEOpt = ((((0 + 1) + 1) + 1) + 1), \
+	kNMEErr1stUser = 10000
+
+newtype ProcessOpt = ProcessOpt CInt deriving (Show, Eq)
+#enum ProcessOpt, ProcessOpt, \
+	kNMEProcessOptDefault = 0, \
+	kNMEProcessOptNoPreAndPost = 0x1, \
+	kNMEProcessOptNoH1 = 0x4, \
+	kNMEProcessOptH1Num = 0x8, \
+	kNMEProcessOptH2Num = 0x10, \
+	kNMEProcessOptNoDL = 0x20, \
+	kNMEProcessOptNoIndentedPar = 0x40, \
+	kNMEProcessOptNoMultilinePar = 0x80, \
+	kNMEProcessOptNoEscape = 0x100, \
+	kNMEProcessOptNoHRule = 0x200, \
+	kNMEProcessOptNoLink = 0x400, \
+	kNMEProcessOptNoImage = 0x800, \
+	kNMEProcessOptNoTable = 0x1000, \
+	kNMEProcessOptNoUnderline = 0x2000, \
+	kNMEProcessOptNoMonospace = 0x4000, \
+	kNMEProcessOptNoSubSuperscript = 0x8000, \
+	kNMEProcessOptNoBold = 0x10000, \
+	kNMEProcessOptNoItalic = 0x20000, \
+	kNMEProcessOptNoPlugin = 0x40000, \
+	kNMEProcessOptVerbatimMono = 0x100000, \
+	kNMEProcessOptXRef = 0x200000
