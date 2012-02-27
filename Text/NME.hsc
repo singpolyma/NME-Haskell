@@ -12,6 +12,7 @@ import qualified Data.ByteString.UTF8 as BS (toString, fromString)
 -- | Takes a string and options, returns Either an error code or a string
 --   in the specified format
 process :: String -> [ProcessOpt] -> String -> Ptr OutputFormat -> Int -> Either Err String
+process [] _ _ _ _ = Right []
 process input options eol outputFormat fontSize = unsafeLocalState $
 	io_process input options eol outputFormat fontSize
 
