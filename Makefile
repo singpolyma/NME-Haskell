@@ -3,12 +3,14 @@ GHCFLAGS=-Wall -XNoCPP -fno-warn-name-shadowing -XHaskell98 -O2
 HLINTFLAGS=-XHaskell98 -XNoCPP -i 'Use camelCase' -i 'Use String' -i 'Use head' -i 'Use string literal' -i 'Use list comprehension' --utf8
 VERSION=0.2
 
-.PHONY: all shell clean doc install
+.PHONY: all shell clean doc install debian
 
 all: example dist/build/libHSnme-$(VERSION).a dist/openpgp-$(VERSION).tar.gz
 
 install: dist/build/libHSnme-$(VERSION).a
 	cabal install
+
+debian: debian/control
 
 example: example.hs Text/NME.hs ext/NME.o
 	ghc --make $(GHCFLAGS) -o $@ $^
@@ -36,6 +38,9 @@ dist/setup-config: nme.cabal
 clean:
 	find -name '*.o' -o -name '*.hi' | xargs $(RM)
 	$(RM) -r dist Test/NME.hs example
+
+debian/control: nme.cabal
+	cabal-debian --update-debianization
 
 dist/build/libHSnme-$(VERSION).a: Text/NME.hs ext/NME.c dist/setup-config
 	cabal build --ghc-options="$(GHCFLAGS)" --gcc-options="$(CFLAGS)"

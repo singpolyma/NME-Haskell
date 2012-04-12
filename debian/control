@@ -1,0 +1,67 @@
+Source: haskell-nme
+Priority: extra
+Section: haskell
+Maintainer: Stephen Paul Weber <singpolyma@singpolyma.net>
+Build-Depends: debhelper (>= 7.0),
+               haskell-devscripts (>= 0.8),
+               cdbs,
+               ghc,
+               ghc-prof,
+               libghc-utf8-string-dev,
+               libghc-utf8-string-prof
+Build-Depends-Indep: ghc-doc,
+                     libghc-utf8-string-doc
+Standards-Version: 3.9.1
+Homepage: https://github.com/singpolyma/NME-Haskell
+
+Package: libghc-nme-dev
+Architecture: any
+Depends: ${shlibs:Depends},
+         ${haskell:Depends},
+         ${misc:Depends}
+Recommends: ${haskell:Recommends}
+Suggests: ${haskell:Suggests}
+Provides: ${haskell:Provides}
+Description: Bindings to the Nyctergatis Markup Engine
+ This library implements a simple, pure binding onto NME, an
+ implementation of WikiCreole.  It has support for output to many
+ formats including HTML and LaTeX.
+ .
+  Author: Stephen Paul Weber <singpolyma@singpolyma.net>
+  Upstream-Maintainer: Stephen Paul Weber <singpolyma@singpolyma.net>
+ .
+ This package contains the normal library files.
+
+Package: libghc-nme-prof
+Architecture: any
+Depends: ${haskell:Depends},
+         ${misc:Depends}
+Recommends: ${haskell:Recommends}
+Suggests: ${haskell:Suggests}
+Provides: ${haskell:Provides}
+Description: Bindings to the Nyctergatis Markup Engine
+ This library implements a simple, pure binding onto NME, an
+ implementation of WikiCreole.  It has support for output to many
+ formats including HTML and LaTeX.
+ .
+  Author: Stephen Paul Weber <singpolyma@singpolyma.net>
+  Upstream-Maintainer: Stephen Paul Weber <singpolyma@singpolyma.net>
+ .
+ This package contains the libraries compiled with profiling enabled.
+
+Package: libghc-nme-doc
+Architecture: all
+Section: doc
+Depends: ${haskell:Depends},
+         ${misc:Depends}
+Recommends: ${haskell:Recommends}
+Suggests: ${haskell:Suggests}
+Description: Bindings to the Nyctergatis Markup Engine
+ This library implements a simple, pure binding onto NME, an
+ implementation of WikiCreole.  It has support for output to many
+ formats including HTML and LaTeX.
+ .
+  Author: Stephen Paul Weber <singpolyma@singpolyma.net>
+  Upstream-Maintainer: Stephen Paul Weber <singpolyma@singpolyma.net>
+ .
+ This package contains the documentation files.
